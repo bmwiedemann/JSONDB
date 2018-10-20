@@ -11,6 +11,8 @@ require Tie::Hash;
 #sub diag(@) {print STDERR "@_\n"}
 sub diag(@) {}
 
+our $coder = JSON::XS->new->pretty->canonical;
+
 sub loadjson
 {
     my $self=shift;
@@ -23,7 +25,7 @@ sub storejson
 {
     my $self=shift;
     open(my $f, "+>", $self->[1]{file}) or die $!;
-    print $f encode_json $self->[0];
+    print $f $coder->encode($self->[0]);
 }
 
 sub TIEHASH
