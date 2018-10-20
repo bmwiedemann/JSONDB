@@ -1,0 +1,2 @@
+tests:
+	prove -v
