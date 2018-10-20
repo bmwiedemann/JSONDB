@@ -6,23 +6,23 @@
 package JSONDB;
 use JSON::XS;
 require Tie::Hash;
-@ISA = qw(Tie::Hash);
+@ISA = qw(Tie::ExtraHash);
 
 sub diag(@) {print STDERR "@_\n"}
 
 sub loadjson
 {
     my $self=shift;
-    open(my $f, "+<", $self->{file}) or die $!;
+    open(my $f, "+<", $self->[1]{file}) or die $!;
     local $/;
-    $self->{data}=decode_json scalar <$f>;
+    $self->[0]=decode_json scalar <$f>;
 }
 
 sub storejson
 {
     my $self=shift;
-    open(my $f, "+>", $self->{file}) or die $!;
-    print $f encode_json $self->{data};
+    open(my $f, "+>", $self->[1]{file}) or die $!;
+    print $f encode_json $self->[0];
 }
 
 sub TIEHASH
@@ -35,17 +35,17 @@ sub TIEHASH
         file=>$filename,
         mode=>$mode,
         umask=>$umask,
-        data=>{},
     );
-    loadjson(\%x) if $mode == 0;
-    bless \%x, $pkg ;
+    my $storage = bless [{}, \%x], $pkg;
+    loadjson($storage) if $mode == 0;
+    return $storage;
 }
 
 sub CLEAR
 {
     diag "CLEAR @_";
     my $self=shift;
-    $self->{data}={};
+    $self->SUPER::CLEAR(@_);
     $self->storejson();
 }
 
@@ -53,8 +53,7 @@ sub DELETE
 {
     diag "DELETE @_";
     my $self=shift;
-    my ($key)=@_;
-    delete $self->{data}->{$key};
+    $self->SUPER::DELETE(@_);
     $self->storejson();
 }
 
@@ -62,48 +61,8 @@ sub STORE
 {
     diag "STORE @_";
     my $self=shift;
-    my ($key,$value)=@_;
-    $self->{data}->{$key}=$value;
+    $self->SUPER::STORE(@_);
     $self->storejson();
-}
-
-sub FETCH
-{
-    diag "FETCH @_";
-    my $self=shift;
-    my ($key)=@_;
-    return $self->{data}->{$key};
-}
-
-sub EXISTS
-{
-    my ($self, $key) = @_;
-    return exists $self->{data}->{$key};
-}
-
-sub SCALAR
-{
-    diag "SCALAR @_";
-    my $self=shift;
-    return %{$self->{data}};
-}
-
-sub FIRSTKEY
-{
-    my $self=shift;
-    (keys(%{$self->{data}}))[0];
-}
-
-sub NEXTKEY
-{
-    my $self=shift;
-    my $key=shift;
-    my @keys=keys(%{$self->{data}});
-    for(my $n=0; $n<=$#keys; ++$n) {
-        if($keys[$n] eq $key) {
-            return $keys[$n+1];
-        }
-    }
 }
 
 1;
