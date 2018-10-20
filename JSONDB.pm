@@ -43,7 +43,11 @@ sub TIEHASH
 
 sub DELETE
 {
-    diag "DELETE";
+    diag "DELETE @_";
+    my $self=shift;
+    my ($key)=@_;
+    delete $self->{data}->{$key};
+    $self->storejson();
 }
 
 sub STORE
