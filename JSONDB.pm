@@ -41,6 +41,14 @@ sub TIEHASH
     bless \%x, $pkg ;
 }
 
+sub CLEAR
+{
+    diag "CLEAR @_";
+    my $self=shift;
+    $self->{data}={};
+    $self->storejson();
+}
+
 sub DELETE
 {
     diag "DELETE @_";
@@ -65,6 +73,12 @@ sub FETCH
     my $self=shift;
     my ($key)=@_;
     return $self->{data}->{$key};
+}
+
+sub EXISTS
+{
+    my ($self, $key) = @_;
+    return exists $self->{data}->{$key};
 }
 
 1;
