@@ -8,7 +8,8 @@ use JSON::XS;
 require Tie::Hash;
 @ISA = qw(Tie::ExtraHash);
 
-sub diag(@) {print STDERR "@_\n"}
+#sub diag(@) {print STDERR "@_\n"}
+sub diag(@) {}
 
 sub loadjson
 {
