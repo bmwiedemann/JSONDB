@@ -81,4 +81,29 @@ sub EXISTS
     return exists $self->{data}->{$key};
 }
 
+sub SCALAR
+{
+    diag "SCALAR @_";
+    my $self=shift;
+    return %{$self->{data}};
+}
+
+sub FIRSTKEY
+{
+    my $self=shift;
+    (keys(%{$self->{data}}))[0];
+}
+
+sub NEXTKEY
+{
+    my $self=shift;
+    my $key=shift;
+    my @keys=keys(%{$self->{data}});
+    for(my $n=0; $n<=$#keys; ++$n) {
+        if($keys[$n] eq $key) {
+            return $keys[$n+1];
+        }
+    }
+}
+
 1;
