@@ -16,7 +16,7 @@ our $coder = JSON::XS->new->pretty->canonical;
 sub loadjson
 {
     my $self=shift;
-    open(my $f, "+<", $self->[1]{file}) or die $!;
+    open(my $f, "+<", $self->[1]{file}) or return undef;
     local $/;
     $self->[0]=decode_json scalar <$f>;
 }
@@ -40,7 +40,9 @@ sub TIEHASH
         umask=>$umask,
     );
     my $storage = bless [{}, \%x], $pkg;
-    loadjson($storage) if $mode == 0;
+    if(!loadjson($storage) && $mode == 0) {
+        die "failed to load $filename: $!";
+    }
     return $storage;
 }
 
