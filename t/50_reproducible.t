@@ -19,4 +19,4 @@ my $n=0;
 for("a".."z") {
     $hash{$_}=$n++;
 }
-is(substr(`md5sum $testdb`, 0, 32), "3f652e87cea7c55b8c77ecba966b7480");
+is(substr(`md5sum $testdb`, 0, 32), "400863921dc3aee7178428a9d85a649a");

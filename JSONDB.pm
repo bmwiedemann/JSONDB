@@ -64,7 +64,6 @@ sub DELETE
 
 sub STORE
 {
-    diag "STORE @_";
     my $self=shift;
     $self->SUPER::STORE(@_);
     $self->storejson();
