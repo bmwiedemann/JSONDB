@@ -8,9 +8,6 @@ use JSON::XS;
 require Tie::Hash;
 @ISA = qw(Tie::ExtraHash);
 
-#sub diag(@) {print STDERR "@_\n"}
-sub diag(@) {}
-
 our $coder = JSON::XS->new->pretty->canonical;
 
 sub loadjson
@@ -30,14 +27,11 @@ sub storejson
 
 sub TIEHASH
 {
-    diag "TIEHASH @_";
     my $pkg = shift;
-    my ($filename, $mode, $umask) = @_;
-    $umask //= 0666;
+    my ($filename, $mode) = @_;
     my %x=(
         file=>$filename,
         mode=>$mode,
-        umask=>$umask,
     );
     my $storage = bless [{}, \%x], $pkg;
     if(!loadjson($storage) && $mode == 0) {
@@ -48,7 +42,6 @@ sub TIEHASH
 
 sub CLEAR
 {
-    diag "CLEAR @_";
     my $self=shift;
     $self->SUPER::CLEAR(@_);
     $self->storejson();
@@ -56,7 +49,6 @@ sub CLEAR
 
 sub DELETE
 {
-    diag "DELETE @_";
     my $self=shift;
     $self->SUPER::DELETE(@_);
     $self->storejson();
