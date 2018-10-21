@@ -8,7 +8,7 @@ require JSON::XS;
 require Tie::Hash;
 @ISA = qw(Tie::ExtraHash);
 
-our $coder = JSON::XS->new->pretty->canonical;
+our $coder = JSON::XS->new->ascii->pretty->canonical;
 
 sub loadjson
 {
