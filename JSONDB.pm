@@ -33,11 +33,11 @@ sub TIEHASH
         file=>$filename,
         mode=>$mode,
     );
-    my $storage = bless [{}, \%x], $pkg;
-    if(!loadjson($storage) && $mode == 0) {
+    my $self = bless [{}, \%x], $pkg;
+    if(!$self->loadjson && $mode == 0) {
         die "failed to load $filename: $!";
     }
-    return $storage;
+    return $self;
 }
 
 sub CLEAR
