@@ -13,7 +13,7 @@ our $coder = JSON::XS->new->pretty->canonical;
 sub loadjson
 {
     my $self=shift;
-    open(my $f, "+<", $self->[1]{file}) or return undef;
+    open(my $f, "<", $self->[1]{file}) or return undef;
     local $/;
     $self->[0]=decode_json scalar <$f>;
 }
@@ -21,7 +21,7 @@ sub loadjson
 sub storejson
 {
     my $self=shift;
-    open(my $f, "+>", $self->[1]{file}) or die $!;
+    open(my $f, ">", $self->[1]{file}) or die $!;
     print $f $coder->encode($self->[0]);
 }
 
