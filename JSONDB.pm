@@ -4,7 +4,7 @@
 # licensed under the same conditions as perl itself
 
 package JSONDB;
-use JSON::XS;
+require JSON::XS;
 require Tie::Hash;
 @ISA = qw(Tie::ExtraHash);
 
@@ -15,7 +15,7 @@ sub loadjson
     my $self=shift;
     open(my $f, "<", $self->[1]{file}) or return undef;
     local $/;
-    $self->[0]=decode_json scalar <$f>;
+    $self->[0]=$coder->decode(<$f>);
 }
 
 sub storejson
