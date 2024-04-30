@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-1.0-or-later
+
 # implement a simple database compatible to DB_File API
 # that writes data as JSON to be agnostic of platform details
 # written 2018 by Bernhard M. Wiedemann
